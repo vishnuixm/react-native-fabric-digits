@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.digits.sdk.android.AuthCallback;
 import com.digits.sdk.android.Digits;
-import com.digits.sdk.android.DigitsAuthConfig;
+import com.digits.sdk.android.AuthConfig;
 import com.digits.sdk.android.DigitsException;
 import com.digits.sdk.android.DigitsOAuthSigning;
 import com.digits.sdk.android.DigitsSession;
@@ -62,29 +62,29 @@ public class DigitsManager extends ReactContextBaseJavaModule implements Lifecyc
         // Check for Twitter config
         getTwitterAuthConfig();
 
-        DigitsAuthConfig.Builder digitsAuthConfigBuilder = new DigitsAuthConfig.Builder()
+        AuthConfig.Builder authConfigBuilder = new AuthConfig.Builder()
                 .withAuthCallBack(this)
-                .withPhoneNumber(phoneNumber)
-                .withThemeResId(R.style.CustomDigitsTheme);
+            .withPhoneNumber(phoneNumber);
+            //.withTheme(R.style.CustomDigitsTheme);
 
         if (options.hasKey("email")) {
-          digitsAuthConfigBuilder.withEmailCollection();
+          authConfigBuilder.withEmailCollection();
         }
 
-        Digits.authenticate(digitsAuthConfigBuilder.build());
+        Digits.authenticate(authConfigBuilder.build());
     }
 
     @ReactMethod
     public void logout() {
-        Digits.getSessionManager().clearActiveSession();
+        Digits.clearActiveSession();
     }
 
     @ReactMethod
     public void sessionDetails(Callback callback) {
-        DigitsSession session = Digits.getSessionManager().getActiveSession();
+        DigitsSession session = Digits.getActiveSession();
         if (session != null) {
             WritableMap sessionData = new WritableNativeMap();
-            sessionData.putString("userId", new Long(session.getId()).toString());
+            //sessionData.putString("userId", new Long(session.getId()).toString());
             sessionData.putString("phoneNumber", session.getPhoneNumber().replaceAll("[^0-9]", ""));
             callback.invoke(null, sessionData);
         } else {
