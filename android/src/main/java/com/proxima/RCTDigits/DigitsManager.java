@@ -127,6 +127,7 @@ public class DigitsManager extends ReactContextBaseJavaModule implements Lifecyc
     @Override
     public void failure(DigitsException exception) {
         digitsException = exception;
+        invokePromise();
     }
 
     @Override
